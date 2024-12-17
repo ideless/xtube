@@ -1,0 +1,110 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply text-primary accent-active underline-offset-4;
+}
+
+a {
+  @apply cursor-pointer text-active hover:underline;
+}
+
+.widget {
+  @apply bg-background/50 data-[float=true]:backdrop-blur data-[float=true]:shadow-md data-[float=true]:shadow-black;
+}
+
+.float-btn {
+  @apply fixed right-4 bottom-4 size-10 rounded-full flex items-center justify-center bg-background/50 backdrop-blur border-t border-dim shadow-md shadow-black hover:shadow-lg hover:shadow-black;
+}
+
+.full-btn {
+  @apply px-2 py-1 bg-input rounded w-full flex items-center justify-center gap-2 cursor-pointer hover:brightness-110 select-none;
+}
+
+/* markdown */
+
+.md {
+  @apply space-y-4 leading-loose;
+}
+
+.md h1,
+.md h2,
+.md h3 {
+  @apply font-bold;
+}
+
+.md h1 {
+  @apply text-2xl;
+}
+
+.md h2 {
+  @apply text-xl;
+}
+
+.md h3 {
+  @apply text-lg;
+}
+
+.md ul,
+.md ol {
+  @apply list-inside pl-4;
+}
+
+.md ul {
+  @apply list-disc;
+}
+
+.md ol {
+  @apply list-decimal;
+}
+
+.md a {
+  @apply text-active hover:underline;
+}
+
+.md blockquote {
+  @apply border-l-4 pl-4;
+}
+
+.md pre {
+  @apply p-4 bg-white/10;
+}
+
+.md table {
+  @apply w-full;
+}
+
+.md thead {
+  @apply border-b-2 border-dim;
+}
+
+.md tr + tr {
+  @apply border-t border-dim;
+}
+
+.md th,
+.md td {
+  @apply text-left;
+}
+
+/* Form */
+
+form label {
+  @apply block aria-required:after:content-['*'] after:text-red-500;
+}
+
+form input[type="text"],
+form input[type="number"],
+form textarea,
+form select {
+  @apply w-full px-2 py-1 bg-white/10 rounded;
+}
+
+form select {
+  @apply cursor-pointer px-1;
+}
+
+form option {
+  @apply bg-background;
+}

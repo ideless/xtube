@@ -1,0 +1,23 @@
+services:
+  xtube:
+    build:
+      context: .
+      network: host
+    volumes:
+      - ./test/data:/data
+      - ./test/font:/font
+    environment:
+      THUMBNAIL_FONT_FILE: "/font/HanyiSentyPagoda Regular.ttf"
+    ports:
+      - "8000:80"
+    develop:
+      watch:
+        - action: sync
+          path: ./dist
+          target: /code/ui
+        - action: sync+restart
+          path: ./scripts/server.py
+          target: /code/server.py
+        - action: sync+restart
+          path: ./scripts/import_media.py
+          target: /code/import_media.py
