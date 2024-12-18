@@ -1,6 +1,14 @@
 <script lang="ts" setup>
-import { faAngleDown, faAngleUp } from "@fortawesome/free-solid-svg-icons";
+import {
+  faAngleDown,
+  faAngleUp,
+  faLocation,
+} from "@fortawesome/free-solid-svg-icons";
 import { ref, onMounted } from "vue";
+
+const props = defineProps<{
+  locationSelector?: string;
+}>();
 
 // Refs
 const contentRef = ref<HTMLElement>();
@@ -16,37 +24,50 @@ function updateScrollButtons() {
   canScrollDown.value = scrollTop + clientHeight < scrollHeight;
 }
 
-const scrollUp = () => {
+function scrollUp() {
   if (!contentRef.value) return;
   contentRef.value.scrollBy({
     top: -contentRef.value.clientHeight,
     behavior: "smooth",
   });
-};
+}
 
-const scrollDown = () => {
+function scrollDown() {
   if (!contentRef.value) return;
   contentRef.value.scrollBy({
     top: contentRef.value.clientHeight,
     behavior: "smooth",
   });
-};
+}
 
-const scrollToTop = () => {
+function scrollToTop() {
   if (!contentRef.value) return;
   contentRef.value.scrollTo({
     top: 0,
     behavior: "smooth",
   });
-};
+}
 
-const scrollToBottom = () => {
+function scrollToBottom() {
   if (!contentRef.value) return;
   contentRef.value.scrollTo({
     top: contentRef.value.scrollHeight,
     behavior: "smooth",
   });
-};
+}
+
+function scrollToLocation() {
+  if (!contentRef.value || !props.locationSelector) return;
+
+  const el = contentRef.value.querySelector(props.locationSelector);
+  if (el) {
+    el.scrollIntoView({
+      block: "center",
+      inline: "nearest",
+      behavior: "smooth",
+    });
+  }
+}
 
 // Lifecycle hooks
 onMounted(() => {
@@ -74,6 +95,10 @@ onMounted(() => {
         class="btn"
       >
         <fa-icon :icon="faAngleUp" />
+      </button>
+
+      <button v-show="locationSelector" @click="scrollToLocation" class="btn">
+        <fa-icon :icon="faLocation" />
       </button>
 
       <button

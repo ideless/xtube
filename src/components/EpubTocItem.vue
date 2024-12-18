@@ -15,17 +15,20 @@ const emit = defineEmits<{
 
 <template>
   <li>
-    <div class="p-2">
+    <div
+      class="p-2 data-[active=true]:bg-white/20"
+      :data-active="item.href === activeHref && !!activeHref"
+    >
       <a
         :class="{
-          'cursor-pointer underline': item.href,
-          'cursor-not-allowed': !item.href,
-          'text-active': item.href === activeHref && activeHref,
+          'cursor-pointer': item.href,
+          'cursor-not-allowed text-primary': !item.href,
         }"
         v-text="item.label"
         @click="if (item.href) emit('select', item.href);"
       />
     </div>
+
     <ul v-if="item.subitems && item.subitems.length" class="pl-2">
       <EpubTocItem
         v-for="subitem in item.subitems"
