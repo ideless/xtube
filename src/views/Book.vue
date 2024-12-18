@@ -8,6 +8,7 @@ import ViewerHeader from "@/components/ViewerHeader.vue";
 import Layout from "@/components/Layout.vue";
 import BookSidebar from "@/components/BookSidebar.vue";
 import BookControls from "@/components/BookControls.vue";
+import ScrollableContainer from "@/components/ScrollableContainer.vue";
 import type { Book, Rendition, NavItem, Location } from "epubjs";
 import type Section from "epubjs/types/section";
 import ePub from "epubjs";
@@ -112,26 +113,28 @@ onUnmounted(() => {
       />
     </template>
 
-    <Layout class="h-full overflow-y-auto overflow-x-hidden">
-      <template #header="{ float }">
-        <BookControls
-          :float="float"
-          :sec-title="secTitle"
-          :has-prev="hasPrev"
-          :has-next="hasNext"
-          :percentage="percentage"
-          :nstops="NSTOPS"
-          @toc="showToc = true"
-          @prev="epub.rendition?.prev()"
-          @next="epub.rendition?.next()"
-          @toggle-fullscreen="showHeader = !showHeader"
-          @percentage="setPercentage"
-        />
-      </template>
+    <ScrollableContainer class="h-full">
+      <Layout>
+        <template #header="{ float }">
+          <BookControls
+            :float="float"
+            :sec-title="secTitle"
+            :has-prev="hasPrev"
+            :has-next="hasNext"
+            :percentage="percentage"
+            :nstops="NSTOPS"
+            @toc="showToc = true"
+            @prev="epub.rendition?.prev()"
+            @next="epub.rendition?.next()"
+            @toggle-fullscreen="showHeader = !showHeader"
+            @percentage="setPercentage"
+          />
+        </template>
 
-      <div class="my-2" ref="viewerEl" />
-      <div class="h-8" />
-    </Layout>
+        <div class="my-2" ref="viewerEl" />
+        <div class="h-8" />
+      </Layout>
+    </ScrollableContainer>
   </Layout>
 </template>
 
