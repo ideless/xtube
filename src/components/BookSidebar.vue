@@ -19,8 +19,12 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <ScrollableContainer class="h-full" location-selector="[data-active=true]">
-    <Layout class="widget break-all" :data-float="above">
+  <ScrollableContainer
+    class="h-full widget break-all"
+    :data-float="above"
+    location-selector="[data-active=true]"
+  >
+    <Layout>
       <template #header="{ float }">
         <div
           class="flex items-center justify-between p-2"
