@@ -23,6 +23,7 @@ const emit = defineEmits<{
     class="h-full widget break-all"
     :data-float="above"
     location-selector="[data-active=true]"
+    :scroll-margin="40"
   >
     <Layout>
       <template #header="{ float }">

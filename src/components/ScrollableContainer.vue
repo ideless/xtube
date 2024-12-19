@@ -4,7 +4,7 @@ import {
   faAngleUp,
   faLocation,
 } from "@fortawesome/free-solid-svg-icons";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 
 const props = withDefaults(
   defineProps<{
@@ -22,14 +22,29 @@ const props = withDefaults(
 const contentRef = ref<HTMLElement>();
 const canScrollUp = ref(false);
 const canScrollDown = ref(false);
+const locationInView = ref(true);
+let resizeObserver: ResizeObserver | null = null;
 
 // Methods
 function updateScrollButtons() {
   if (!contentRef.value) return;
 
   const { scrollTop, scrollHeight, clientHeight } = contentRef.value;
+
   canScrollUp.value = scrollTop > 0;
   canScrollDown.value = scrollTop + clientHeight < scrollHeight;
+
+  if (props.locationSelector) {
+    const el = contentRef.value.querySelector(
+      props.locationSelector,
+    ) as HTMLElement;
+
+    if (el) {
+      locationInView.value =
+        el.offsetTop >= scrollTop + props.scrollMargin &&
+        el.offsetTop <= scrollTop + clientHeight - props.scrollMargin;
+    }
+  }
 }
 
 function scrollUp() {
@@ -79,7 +94,12 @@ function scrollToLocation() {
 
 // Lifecycle hooks
 onMounted(() => {
-  updateScrollButtons();
+  resizeObserver = new ResizeObserver(updateScrollButtons);
+  resizeObserver.observe(contentRef.value!);
+});
+
+onUnmounted(() => {
+  if (resizeObserver) resizeObserver.disconnect();
 });
 </script>
 
@@ -105,7 +125,11 @@ onMounted(() => {
         <fa-icon :icon="faAngleUp" />
       </button>
 
-      <button v-show="locationSelector" @click="scrollToLocation" class="btn">
+      <button
+        v-show="locationSelector && !locationInView"
+        @click="scrollToLocation"
+        class="btn"
+      >
         <fa-icon :icon="faLocation" />
       </button>
 
