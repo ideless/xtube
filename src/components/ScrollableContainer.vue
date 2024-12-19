@@ -10,9 +10,11 @@ const props = withDefaults(
   defineProps<{
     locationSelector?: string;
     scrollBehavior?: ScrollBehavior;
+    scrollMargin?: number;
   }>(),
   {
     scrollBehavior: "smooth",
+    scrollMargin: 0,
   },
 );
 
@@ -33,7 +35,7 @@ function updateScrollButtons() {
 function scrollUp() {
   if (!contentRef.value) return;
   contentRef.value.scrollBy({
-    top: -contentRef.value.clientHeight,
+    top: -contentRef.value.clientHeight + props.scrollMargin,
     behavior: props.scrollBehavior,
   });
 }
@@ -41,7 +43,7 @@ function scrollUp() {
 function scrollDown() {
   if (!contentRef.value) return;
   contentRef.value.scrollBy({
-    top: contentRef.value.clientHeight,
+    top: contentRef.value.clientHeight - props.scrollMargin,
     behavior: props.scrollBehavior,
   });
 }

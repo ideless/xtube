@@ -113,7 +113,11 @@ onUnmounted(() => {
       />
     </template>
 
-    <ScrollableContainer scroll-behavior="instant" class="h-full">
+    <ScrollableContainer
+      scroll-behavior="instant"
+      :scroll-margin="80"
+      class="h-full"
+    >
       <Layout>
         <template #header="{ float }">
           <BookControls
