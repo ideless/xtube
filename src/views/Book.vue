@@ -20,6 +20,7 @@ const apiStore = useApiStore();
 const record = computed(() => apiStore.getRecord(route.params.uid as string));
 
 const viewerEl = ref<HTMLDivElement>();
+const aEl = ref<HTMLLinkElement>();
 
 const epub: {
   book?: Book;
@@ -44,7 +45,7 @@ function setPercentage(value: number) {
 }
 
 onMounted(async () => {
-  if (!viewerEl.value || !record.value) {
+  if (!viewerEl.value || !aEl.value || !record.value) {
     router.back();
     return;
   }
@@ -62,9 +63,22 @@ onMounted(async () => {
     });
 
     // theme
-    const style = window.getComputedStyle(viewerEl.value);
-    epub.rendition.themes.override("color", style.color);
-    epub.rendition.themes.override("background", "transparent");
+    const aStyle = window.getComputedStyle(aEl.value);
+    epub.rendition.themes.register("dark", {
+      body: {
+        color: window.getComputedStyle(viewerEl.value).color,
+        background: "transparent",
+      },
+      a: {
+        color: aStyle.color,
+        "text-decoration": "none",
+        "text-underline-offset": aStyle.textUnderlineOffset,
+      },
+      "a:hover": {
+        "text-decoration": "underline",
+      },
+    });
+    epub.rendition.themes.select("dark");
 
     // locations (do not await)
     epub.book.ready.then(() => epub.book!.locations.generate(NSTOPS));
@@ -137,6 +151,7 @@ onUnmounted(() => {
 
         <div class="my-2" ref="viewerEl" />
         <div class="h-8" />
+        <a ref="aEl" />
       </Layout>
     </ScrollableContainer>
   </Layout>
