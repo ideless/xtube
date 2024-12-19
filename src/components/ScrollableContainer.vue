@@ -6,9 +6,15 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { ref, onMounted } from "vue";
 
-const props = defineProps<{
-  locationSelector?: string;
-}>();
+const props = withDefaults(
+  defineProps<{
+    locationSelector?: string;
+    scrollBehavior?: ScrollBehavior;
+  }>(),
+  {
+    scrollBehavior: "smooth",
+  },
+);
 
 // Refs
 const contentRef = ref<HTMLElement>();
@@ -28,7 +34,7 @@ function scrollUp() {
   if (!contentRef.value) return;
   contentRef.value.scrollBy({
     top: -contentRef.value.clientHeight,
-    behavior: "smooth",
+    behavior: props.scrollBehavior,
   });
 }
 
@@ -36,7 +42,7 @@ function scrollDown() {
   if (!contentRef.value) return;
   contentRef.value.scrollBy({
     top: contentRef.value.clientHeight,
-    behavior: "smooth",
+    behavior: props.scrollBehavior,
   });
 }
 
@@ -44,7 +50,7 @@ function scrollToTop() {
   if (!contentRef.value) return;
   contentRef.value.scrollTo({
     top: 0,
-    behavior: "smooth",
+    behavior: props.scrollBehavior,
   });
 }
 
@@ -52,7 +58,7 @@ function scrollToBottom() {
   if (!contentRef.value) return;
   contentRef.value.scrollTo({
     top: contentRef.value.scrollHeight,
-    behavior: "smooth",
+    behavior: props.scrollBehavior,
   });
 }
 
@@ -64,7 +70,7 @@ function scrollToLocation() {
     el.scrollIntoView({
       block: "center",
       inline: "nearest",
-      behavior: "smooth",
+      behavior: props.scrollBehavior,
     });
   }
 }
