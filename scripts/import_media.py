@@ -478,8 +478,21 @@ class Cmd:
             return timestamp_to_iso_local(file.stat().st_ctime)
 
     @staticmethod
-    async def convert_image(file: Path, output: Path):
-        await Cmd.run(['convert', file, output])
+    async def convert_image(
+        file: Path,
+        output: Path,
+        resize: str = None,
+        quality: int = None,
+    ):
+        cmd = ['convert', file, output]
+
+        if resize:
+            cmd.extend(['-resize', resize])
+
+        if quality:
+            cmd.extend(['-quality', str(quality)])
+
+        await Cmd.run(cmd)
 
 
 class YAML:
@@ -834,6 +847,18 @@ class VideoImporter(MediaImporter):
 
 
 class ImageImporter(MediaImporter):
+    def __init__(
+        self,
+        *args,
+        resize: str = None,
+        quality: int = None,
+        **kwargs,
+    ):
+        super().__init__(*args, **kwargs)
+
+        self.bitrate = resize or '1920x1080>'
+        self.quality = quality or 75
+
     async def get_info(self):
         self.record['creation_time'] = await Cmd.get_image_creation_time(
             self.file)
@@ -846,7 +871,12 @@ class ImageImporter(MediaImporter):
 
     async def process_file(self):
         pt_path = self.tmp.file(suffix=".webp")
-        await Cmd.convert_image(self.file, pt_path)
+        await Cmd.convert_image(
+            self.file,
+            pt_path,
+            resize=self.resize,
+            quality=self.quality,
+        )
         await super().process_file(pt_path, 'image.webp')
 
 
@@ -963,8 +993,11 @@ def get_command_line_args():
     va('--hls-time', help='The segment duration (default: 10)', type=int)
 
     # Image
-    subparsers.add_parser(
+    image_parser = subparsers.add_parser(
         'image', parents=[common_parser, base_parser], help='Import image')
+    ia = image_parser.add_argument
+    ia('--resize', help='The resize geometry (default: 1920x1080>)')
+    ia('--quality', help='The output image quality (default: 75)', type=int)
 
     # Book
     book_parser = subparsers.add_parser(
