@@ -17,6 +17,8 @@ const description = ref("");
 let thumbnail: File | undefined = undefined;
 const bitrate = useLocalStorage("upload.form.bitrate", "2000k");
 const hls_time = useLocalStorage("upload.form.hls_time", 10);
+const resize = useLocalStorage("upload.form.resize", "1920x1080>");
+const quality = useLocalStorage("upload.form.quality", 75);
 const author = ref("");
 const encoding = useLocalStorage("upload.form.encoding", "UTF-8");
 const language = useLocalStorage("upload.form.language", "en-US");
@@ -144,6 +146,22 @@ function submit() {
         <div v-show="kind === 'video'">
           <label for="hls-time">HLS time (s)</label>
           <input id="hls-time" type="number" min="1" v-model="hls_time" />
+        </div>
+
+        <div v-show="kind === 'image'">
+          <label for="resize">Resize</label>
+          <input id="resize" type="text" v-model="resize" />
+        </div>
+
+        <div v-show="kind === 'image'">
+          <label for="quality">quality (%)</label>
+          <input
+            id="quality"
+            type="number"
+            min="1"
+            max="100"
+            v-model="quality"
+          />
         </div>
 
         <div v-show="kind === 'book'">

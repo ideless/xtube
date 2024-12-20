@@ -366,7 +366,7 @@ class Cmd:
         output: Path,
         size: str = '300x200',
     ):
-        await Cmd.run(['convert', image, '-thumbnail', size, output])
+        await Cmd.run(['magick', image, '-thumbnail', size, output])
 
     @staticmethod
     async def text_to_thumbnail(
@@ -379,13 +379,29 @@ class Cmd:
         font: Path = None,
     ):
         # https://usage.imagemagick.org/text/
-        cmd = ['convert', '-size', size, '-background', background,
+        cmd = ['magick', '-size', size, '-background', background,
                '-fill', fill, '-pointsize', str(pointsize),
                '-gravity', 'Center']
         if font:
             cmd.extend(['-font', font])
         cmd.extend(['caption:' + text, output])
         await Cmd.run(cmd)
+
+    @staticmethod
+    async def convert_image(
+        file: Path,
+        output: Path,
+        resize: str = None,
+        quality: int = None,
+    ):
+        cmd = ['magick', file]
+
+        if resize:
+            cmd.extend(['-resize', resize])
+        if quality:
+            cmd.extend(['-quality', str(quality)])
+
+        await Cmd.run(cmd + [output])
 
     @staticmethod
     async def encrypt_file(file: Path, output: Path, key: str, iv: str):
@@ -476,23 +492,6 @@ class Cmd:
         else:
             # Fallback to file creation time if no date is found in metadata
             return timestamp_to_iso_local(file.stat().st_ctime)
-
-    @staticmethod
-    async def convert_image(
-        file: Path,
-        output: Path,
-        resize: str = None,
-        quality: int = None,
-    ):
-        cmd = ['convert', file, output]
-
-        if resize:
-            cmd.extend(['-resize', resize])
-
-        if quality:
-            cmd.extend(['-quality', str(quality)])
-
-        await Cmd.run(cmd)
 
 
 class YAML:
@@ -856,7 +855,7 @@ class ImageImporter(MediaImporter):
     ):
         super().__init__(*args, **kwargs)
 
-        self.bitrate = resize or '1920x1080>'
+        self.resize = resize or '1920x1080>'
         self.quality = quality or 75
 
     async def get_info(self):
