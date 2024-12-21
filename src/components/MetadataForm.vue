@@ -28,7 +28,7 @@ let thumbnail: File | undefined;
 
 <template>
   <form
-    class="space-y-3 w-[600px] max-w-full"
+    class="space-y-3 w-full"
     @submit.prevent="
       emit('submit', {
         title: title,
@@ -41,7 +41,7 @@ let thumbnail: File | undefined;
       <label for="title" aria-required="true">Title</label>
       <input
         v-model="title"
-        class="area"
+        class="!bg-black/10"
         type="text"
         id="title"
         pattern="^(\S|\S.*\S)$"
@@ -50,17 +50,21 @@ let thumbnail: File | undefined;
 
     <div>
       <label for="description">Description</label>
-      <textarea v-model="description" class="area" id="description" />
+      <textarea v-model="description" class="!bg-black/10" id="description" />
     </div>
 
     <div>
       <label>Thumbnail</label>
-      <FileInput @change="(f) => (thumbnail = f)" accept="image/*" />
+      <FileInput
+        class="!text-green-600"
+        @change="(f) => (thumbnail = f)"
+        accept="image/*"
+      />
     </div>
 
     <div class="flex gap-2">
       <button
-        class="full-btn"
+        class="btn bg-black/10 text-black"
         type="button"
         @click="emit('cancel')"
         v-show="!hideCancel"
@@ -68,10 +72,16 @@ let thumbnail: File | undefined;
         <fa-icon :icon="faXmark" />
         <span>Cancel</span>
       </button>
-      <button class="full-btn" type="submit">
+      <button class="btn bg-black text-white" type="submit">
         <fa-icon :icon="faFloppyDisk" />
         <span>Save</span>
       </button>
     </div>
   </form>
 </template>
+
+<style scoped>
+.btn {
+  @apply rounded py-1 space-x-2 w-full hover:opacity-80;
+}
+</style>
