@@ -53,7 +53,7 @@ function formatValue(value: any) {
       <div class="space-y-3 sm:space-y-0">
         <div class="sm:flex" v-for="(value, key) in record">
           <div
-            class="capitalize text-dim sm:w-32"
+            class="capitalize text-dim italic sm:w-32"
             v-text="key.replace('_', ' ')"
           />
           <div class="font-mono break-words">{{ formatValue(value) }}</div>

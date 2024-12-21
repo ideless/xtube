@@ -38,7 +38,7 @@ watch(
         @click.self="wDialog.reject('cancel')"
       >
         <div
-          class="bg-white text-black rounded-lg px-6 transition-all duration-300 max-h-[calc(100vh-40px)]"
+          class="bg-white text-black rounded-lg px-6 transition-all duration-300 max-h-[calc(100vh-80px)]"
           :class="{
             // Mobile styles
             'fixed bottom-0 w-full rounded-b-none overflow-auto': isMobile,
