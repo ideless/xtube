@@ -684,6 +684,12 @@ class DB:
         async with self as db:
             db.append(record)
 
+    async def load(self, file: Path):
+        await Cmd.encrypt_file(file, self.db_file, self.key, self.iv)
+
+    async def save(self, file: str):
+        await Cmd.decrypt_file(self.db_file, file, self.key, self.iv)
+
 
 class MediaImporter:
     def __init__(
@@ -1035,6 +1041,18 @@ def get_command_line_args():
     ra = remove_parser.add_argument
     ra("uid", nargs='+', help="The uid to remove")
 
+    # Export DB
+    export_db_parser = subparsers.add_parser(
+        'export-db', parents=[common_parser], help='Export database')
+    ea = export_db_parser.add_argument
+    ea('path', help='The output file path')
+
+    # Import DB
+    import_db_parser = subparsers.add_parser(
+        'import-db', parents=[common_parser], help='Export database')
+    ia = import_db_parser.add_argument
+    ia('path', help='The input file path', type=v_file)
+
     return parser.parse_args()
 
 
@@ -1075,6 +1093,10 @@ async def main(tmp: Tmp):
         DB(key, tmp, args.root_dir).clear()
     elif args.command == 'remove':
         await DB(key, tmp, args.root_dir).remove(args.uid)
+    elif args.command == 'export-db':
+        await DB(key, tmp, args.root_dir).save(args.path)
+    elif args.command == 'import-db':
+        await DB(key, tmp, args.root_dir).load(args.path)
 
 
 if __name__ == '__main__':
