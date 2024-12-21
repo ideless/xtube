@@ -505,7 +505,11 @@ class YAML:
         elif value == "false":
             return False
         elif re.match("('.*'|\".*\")$", value):
-            return value[1:-1]
+            return json.loads(value)
+        elif re.match(r"[+-]?\d+$", value):
+            return int(value)
+        elif re.match(r"[+-]?\d+\.\d+$", value):
+            return float(value)
         else:
             return value
 
