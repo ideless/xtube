@@ -3,7 +3,7 @@ import FileInput from "@/components/FileInput.vue";
 import { useApiStore } from "@/store";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { wAlert } from "@/widgets";
+import { wAlert, wLoading } from "@/widgets";
 import { useLocalStorage } from "@vueuse/core";
 
 const apiStore = useApiStore();
@@ -24,8 +24,6 @@ const encoding = useLocalStorage("upload.form.encoding", "UTF-8");
 const language = useLocalStorage("upload.form.language", "en-US");
 const toc_title = useLocalStorage("upload.form.toc_title", "Table of Contents");
 const max_ctl = useLocalStorage("upload.form.max_ctl", 50);
-
-const loading = ref(false);
 
 // TODO: generalize to any title
 function parseBookTitle() {
@@ -68,7 +66,7 @@ function openThumbnail(f?: File) {
 function submit() {
   if (!file || !kind.value) return;
 
-  loading.value = true;
+  wLoading.open("");
 
   apiStore
     .uploadMedia({
@@ -92,7 +90,7 @@ function submit() {
       wAlert.open({ kind: "error", message: String(e) });
     })
     .finally(() => {
-      loading.value = false;
+      wLoading.resolve("ok");
     });
 }
 </script>
@@ -101,7 +99,6 @@ function submit() {
   <div class="h-screen flex p-4 overflow-auto">
     <div
       class="w-full max-w-[600px] m-auto p-6 rounded shadow-xl shadow-black border-t border-t-dim"
-      v-loading="loading"
     >
       <h2 class="font-bold text-lg mb-6">Upload media file</h2>
       <form class="space-y-6" @submit.prevent="submit">
