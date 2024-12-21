@@ -37,22 +37,33 @@ async function saveChanges(metadata: {
     loading.value = false;
   }
 }
+
+function formatValue(value: any) {
+  if (Number.isInteger(value)) {
+    return new Intl.NumberFormat().format(value);
+  } else {
+    return value;
+  }
+}
 </script>
 
 <template>
   <div v-loading="loading">
     <div v-show="mode === 'view'">
-      <div class="space-y-3 md:space-y-0">
-        <div class="md:flex" v-for="(value, key) in record">
+      <div class="space-y-3 sm:space-y-0">
+        <div class="sm:flex" v-for="(value, key) in record">
           <div
-            class="capitalize font-bold md:w-32"
+            class="capitalize text-dim sm:w-32"
             v-text="key.replace('_', ' ')"
           />
-          <div class="break-words">{{ value }}</div>
+          <div class="font-mono break-words">{{ formatValue(value) }}</div>
         </div>
       </div>
 
-      <button class="full-btn mt-2" @click="mode = 'edit'">
+      <button
+        class="w-full bg-black text-white py-1 mt-2 space-x-2 rounded hover:opacity-80"
+        @click="mode = 'edit'"
+      >
         <fa-icon :icon="faEdit" />
         <span>Edit</span>
       </button>
