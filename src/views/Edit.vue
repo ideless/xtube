@@ -90,8 +90,8 @@ function mountEditor(el: HTMLTextAreaElement, initialValue: string) {
         name: "resource-link",
         action: (editor) => {
           selectResources(false)
-            .then((records: AnyRecord[]) => {
-              const uid = records[0].uid;
+            .then((uids: string[]) => {
+              const uid = uids[0];
               editor.codemirror.replaceSelection(`[[${uid}]]`);
               editor.codemirror.focus();
             })
@@ -104,9 +104,9 @@ function mountEditor(el: HTMLTextAreaElement, initialValue: string) {
         name: "resource-grid",
         action: (editor) => {
           selectResources(true)
-            .then((records: AnyRecord[]) => {
-              const uids = records.map((r) => r.uid).join(",");
-              editor.codemirror.replaceSelection(`![[${uids}]]`);
+            .then((uids: string[]) => {
+              const joined = uids.join(",");
+              editor.codemirror.replaceSelection(`![[${joined}]]`);
               editor.codemirror.focus();
             })
             .catch(() => {});

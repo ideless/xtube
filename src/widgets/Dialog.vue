@@ -33,7 +33,7 @@ watch(
   <Teleport to="body">
     <template v-if="isOpen">
       <div
-        class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 transition-opacity duration-300"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur transition-opacity duration-300"
         :class="{ 'opacity-0': isClosing }"
         @click.self="wDialog.reject('cancel')"
       >
