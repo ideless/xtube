@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-  @apply text-primary accent-active underline-offset-4;
+  @apply text-primary accent-active underline-offset-4 overscroll-none;
 }
 
 a {
