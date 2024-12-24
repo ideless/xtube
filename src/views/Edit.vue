@@ -169,6 +169,10 @@ onMounted(async () => {
   @apply border-none bg-background;
 }
 
+.EasyMDEContainer .editor-toolbar.fullscreen {
+  @apply whitespace-nowrap overflow-x-auto overflow-y-hidden;
+}
+
 .EasyMDEContainer button {
   @apply border-none hover:!bg-white/10;
 }
