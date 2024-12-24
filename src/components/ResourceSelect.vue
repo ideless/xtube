@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { faAngleDown, faCheck } from "@fortawesome/free-solid-svg-icons";
 import { ref, computed } from "vue";
+import { MediaIconMap } from "@/store/icons";
 
 const props = defineProps<{
   records: AnyRecord[];
@@ -170,12 +171,15 @@ const submitSelection = () => {
             @click.stop
             @change="handleRecordClick(r.uid)"
           />
-          <div>
-            <div class="font-semibold" v-html="highlightText(r.title)"></div>
-            <div
-              class="text-gray-600"
+          <div class="overflow-hidden">
+            <p class="whitespace-nowrap overflow-hidden text-ellipsis">
+              <fa-icon :icon="MediaIconMap[r.kind]" />
+              <span class="ml-2" v-html="highlightText(r.title)" />
+            </p>
+            <p
+              class="text-dim break-words"
               v-html="highlightText(r.description)"
-            ></div>
+            />
           </div>
         </div>
       </div>

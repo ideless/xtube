@@ -52,7 +52,7 @@ onUnmounted(() => {
       <ViewerHeader :record="record" :data-float="float" />
     </template>
 
-    <div class="p-6 text-center space-y-4">
+    <div class="p-6 text-center space-y-4 break-words">
       <h3 class="font-bold text-2xl">{{ record.title }}</h3>
       <p>{{ record.description }}</p>
       <p class="text-dim">{{ bytesToString(record.size) }}</p>

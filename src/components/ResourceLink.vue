@@ -1,27 +1,13 @@
 <script setup lang="ts">
-import { faMarkdown } from "@fortawesome/free-brands-svg-icons";
-import {
-  faVideo,
-  faImage,
-  faBookOpen,
-  faFileCircleQuestion,
-} from "@fortawesome/free-solid-svg-icons";
 import { useApiStore } from "@/store";
 import { computed } from "vue";
+import { MediaIconMap } from "@/store/icons";
 
 const apiStore = useApiStore();
 
 const props = defineProps<{
   uid: string;
 }>();
-
-const iconMap = {
-  note: faMarkdown,
-  video: faVideo,
-  image: faImage,
-  book: faBookOpen,
-  file: faFileCircleQuestion,
-};
 
 const record = computed(() => apiStore.recordByUid[props.uid]);
 </script>
@@ -32,7 +18,7 @@ const record = computed(() => apiStore.recordByUid[props.uid]);
     :to="{ name: record.kind, params: { uid: record.uid } }"
     v-if="record"
   >
-    <fa-icon :icon="iconMap[record.kind]" />
+    <fa-icon :icon="MediaIconMap[record.kind]" />
     <span v-text="record.title" />
   </router-link>
 </template>
