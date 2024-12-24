@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import EasyMDE from "easymde";
 import "easymde/dist/easymde.min.css";
+import "@/assets/fontello/fontello.css";
 import { onMounted, ref, markRaw } from "vue";
 import { useRoute } from "vue-router";
 import { useRouter } from "vue-router";
@@ -64,6 +65,7 @@ function selectResources(multiple: boolean) {
 
 function mountEditor(el: HTMLTextAreaElement, initialValue: string) {
   new EasyMDE({
+    autoDownloadFontAwesome: false,
     element: el,
     spellChecker: false,
     maxHeight: "50vh",
