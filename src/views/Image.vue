@@ -1,8 +1,7 @@
 <script lang="ts" setup>
 import "viewerjs/dist/viewer.css";
 import Viewer from "viewerjs";
-import { useRoute } from "vue-router";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { useApiStore } from "@/store";
 import { nextTick, onMounted, onUnmounted, ref, computed } from "vue";
 import ViewerHeader from "@/components/ViewerHeader.vue";
