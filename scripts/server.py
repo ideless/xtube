@@ -7,13 +7,15 @@ import import_media as IM
 from typing import Annotated
 import anyio
 import os
+import uvicorn
 
 
 app = FastAPI()
 
 
 DATA_DIR = Path(os.environ.get("DATA_DIR", "data"))
-UI_DIR = Path(os.environ.get("UI_DIR", "ui"))
+UI_DIR = Path(os.environ.get("UI_DIR", os.path.abspath(
+    os.path.join(os.path.dirname(__file__), 'ui'))))
 THUMBNAIL_FONT_FILE = Path(os.environ.get("THUMBNAIL_FONT_FILE", "font.ttf"))
 
 DATA_DIR.mkdir(parents=True, exist_ok=True)
@@ -209,3 +211,6 @@ async def create_note(
 # Serve static files at last
 app.mount("/data", StaticFiles(directory=DATA_DIR), name="data")
 app.mount("/", StaticFiles(directory=UI_DIR, html=True), name="ui")
+
+if __name__ == "__main__":
+    uvicorn.run(app)

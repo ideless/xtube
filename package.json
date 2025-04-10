@@ -9,6 +9,7 @@
     "dev-docker": "docker compose up --watch",
     "build": "vue-tsc -b && vite build",
     "build-docker": "bash scripts/build-docker.sh",
+    "build-linux": "bash scripts/build-linux.sh",
     "preview": "vite preview",
     "generate-media": "bash scripts/generate_test_media.sh",
     "import-media": "bash scripts/import_test_media.sh"

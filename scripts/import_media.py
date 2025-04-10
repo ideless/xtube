@@ -15,6 +15,8 @@ import hashlib
 import asyncio
 from enum import Enum
 import html
+import sys
+import mimetypes
 
 
 def random_string(length: int, charset: str = 'nlu'):
@@ -343,6 +345,12 @@ class EPUB3:
 
 
 class Cmd:
+    env = os.environ.copy()
+
+    # pyinstaller specific
+    if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
+        env['PATH'] = f"{sys._MEIPASS}:{env['PATH']}"
+
     @staticmethod
     async def run(cmd: list, capture=False, **kwargs):
         if capture:
@@ -350,6 +358,7 @@ class Cmd:
                 *cmd,
                 stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.PIPE,
+                env=Cmd.env,
                 **kwargs,
             )
             stdout, stderr = await process.communicate()
@@ -357,7 +366,7 @@ class Cmd:
                 raise Exception(f"Command failed: {stderr.decode()}")
             return stdout.decode()
         else:
-            process = await asyncio.create_subprocess_exec(*cmd, **kwargs)
+            process = await asyncio.create_subprocess_exec(*cmd, env=Cmd.env, **kwargs)
             await process.wait()
 
     @staticmethod
@@ -415,21 +424,45 @@ class Cmd:
 
     @staticmethod
     async def get_md5(fileOrDir: Path):
+        # if fileOrDir.is_file():
+        #     result = await Cmd.run(['md5sum', fileOrDir], capture=True)
+        #     return result.split()[0]
+        # elif fileOrDir.is_dir():
+        #     result = await Cmd.run(
+        #         ['find', '.', '-type', 'f', '-exec', 'md5sum', '{}', ';'],
+        #         capture=True, cwd=fileOrDir,
+        #     )
+        #     return result
+        def calculate_md5(file_path: Path) -> str:
+            hasher = hashlib.md5()
+            with open(file_path, 'rb') as f:
+                for chunk in iter(lambda: f.read(4096), b""):
+                    hasher.update(chunk)
+            return hasher.hexdigest()
+
         if fileOrDir.is_file():
-            result = await Cmd.run(['md5sum', fileOrDir], capture=True)
-            return result.split()[0]
+            return calculate_md5(fileOrDir)
         elif fileOrDir.is_dir():
-            result = await Cmd.run(
-                ['find', '.', '-type', 'f', '-exec', 'md5sum', '{}', ';'],
-                capture=True, cwd=fileOrDir,
-            )
-            return result
+            # List all files in the directory (recursively) and calculate their MD5
+            md5_results = []
+            for root, dirs, files in os.walk(fileOrDir):
+                for file in files:
+                    file_path = Path(root) / file
+                    file_md5 = calculate_md5(file_path)
+                    md5_results.append(
+                        f"{file_md5}  ./{file_path.relative_to(fileOrDir)}")
+            return "\n".join(md5_results)
+        else:
+            raise ValueError(
+                "The provided path is neither a file nor a directory.")
 
     @staticmethod
     async def get_mime_type(file: Path):
-        result = await Cmd.run(
-            ['file', '--mime-type', '--brief', file], capture=True)
-        return result
+        # result = await Cmd.run(
+        #     ['file', '--mime-type', '--brief', file], capture=True)
+        # return result
+        mime_type, _ = mimetypes.guess_type(file)
+        return mime_type
 
     @staticmethod
     async def get_video_format(file: Path):

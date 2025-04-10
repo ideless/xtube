@@ -129,3 +129,6 @@ celerybeat-schedule
 # Leaked password protection
 !.gitignore
 !.gitattributes
+
+# Temporary directories
+data
