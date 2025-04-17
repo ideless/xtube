@@ -349,7 +349,10 @@ class Cmd:
 
     # pyinstaller specific
     if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
-        env['PATH'] = f"{sys._MEIPASS}:{env['PATH']}"
+        env['PATH'] = f"{sys._MEIPASS}/tools:{env['PATH']}"
+
+    print("PATH", env['PATH'])
+    print("LD_LIBRARY_PATH", env['LD_LIBRARY_PATH'])
 
     @staticmethod
     async def run(cmd: list, capture=False, **kwargs):

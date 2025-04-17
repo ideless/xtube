@@ -34,13 +34,9 @@ pushd build
 
 pyinstaller \
   --name xtube \
-  --onefile \
+  --onedir \
   --add-data ui:ui \
-  --add-binary tools/magick:. \
-  --add-binary tools/identify:. \
-  --add-binary tools/ffmpeg:. \
-  --add-binary tools/ffprobe:. \
-  --add-binary tools/openssl:. \
+  --add-data tools/*:tools \
   --noconfirm \
   server.py
 

@@ -213,4 +213,4 @@ app.mount("/data", StaticFiles(directory=DATA_DIR), name="data")
 app.mount("/", StaticFiles(directory=UI_DIR, html=True), name="ui")
 
 if __name__ == "__main__":
-    uvicorn.run(app)
+    uvicorn.run(app, host="0.0.0.0")
